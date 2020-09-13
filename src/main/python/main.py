@@ -7,7 +7,7 @@ import cv2 as cv
 import numpy as np
 import sys
 
-class Stream(QThread):
+class TStream(QThread):
     change_pixmap_signal = pyqtSignal(np.ndarray)
 
     def __init__(self, url):
@@ -32,7 +32,7 @@ class App(QWidget):
         super().__init__()
         self.cam1_url = 'rtsp://192.168.0.60:554/11'
         self.cam2_url = 'rtsp://192.168.0.61:554/11'
-        self.setWindowTitle("Cameras de Maxime")
+        self.setWindowTitle("Visualisateur de caméras de surveillance")
         self.disply_width = 640
         self.display_height = 480
         self.cam1_label = QLabel(self)
@@ -40,15 +40,15 @@ class App(QWidget):
         self.cam2_label = QLabel(self)
         self.cam2_label.resize(self.disply_width, self.display_height)
         layout = QGridLayout()
-        layout.addWidget(QLabel("Caméra #1: {} - Porte de garage".format(self.cam1_url)), 0, 0, Qt.AlignCenter|Qt.AlignBottom)
-        layout.addWidget(QLabel("Caméra #2: {} - Porte principale".format(self.cam2_url)), 2, 0, Qt.AlignCenter|Qt.AlignBottom)
-        layout.addWidget(self.cam1_label, 1, 0, Qt.AlignCenter)
-        layout.addWidget(self.cam2_label, 3, 0, Qt.AlignCenter)
+        layout.addWidget(QLabel("Caméra #1: {} - Porte de garage".format(self.cam1_url)), 0, 0, Qt.AlignCenter | Qt.AlignBottom)
+        layout.addWidget(QLabel("Caméra #2: {} - Porte principale".format(self.cam2_url)), 2, 0, Qt.AlignCenter | Qt.AlignBottom)
+        layout.addWidget(self.cam1_label, 1, 0)
+        layout.addWidget(self.cam2_label, 3, 0)
         layout.setRowMinimumHeight(0, 20)
         layout.setRowMinimumHeight(2, 40)
         self.setLayout(layout)
-        self.cam1 = Stream(self.cam1_url)
-        self.cam2 = Stream(self.cam2_url)
+        self.cam1 = TStream(self.cam1_url)
+        self.cam2 = TStream(self.cam2_url)
         self.cam1.change_pixmap_signal.connect(self.cam1_update)
         self.cam2.change_pixmap_signal.connect(self.cam2_update)
         self.cam1.start()
@@ -81,6 +81,7 @@ if __name__ == '__main__':
     appctxt = ApplicationContext()
     app = QApplication(sys.argv)
     application = App()
+    application.setWindowFlags(Qt.WindowTitleHint | Qt.WindowCloseButtonHint | Qt.CustomizeWindowHint)
     application.show()
     exit_code = appctxt.app.exec_()
     sys.exit(exit_code)
