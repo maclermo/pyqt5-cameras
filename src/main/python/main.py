@@ -30,8 +30,8 @@ class TStream(QThread):
 class App(QWidget):
     def __init__(self):
         super().__init__()
-        self.cam1_url = 'rtsp://192.168.0.60:554/11'
-        self.cam2_url = 'rtsp://192.168.0.61:554/11'
+        self.cam1_url = 'rtsp://cam1.mclermont.ca:6010/11'
+        self.cam2_url = 'rtsp://cam2.mclermont.ca:6011/11'
         self.setWindowTitle("Visualisateur de caméras de surveillance")
         self.disply_width = 640
         self.display_height = 480
